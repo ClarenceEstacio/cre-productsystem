@@ -14,10 +14,26 @@ function connect (){
     return $pdo;
     
 
-  } catch (\Throwable $th) {
+  } catch (PDOException $e) {
     echo "Connection failed: " .$e->getMessage();
   }
   
 }
 
-connect();
+function insertProduct($productName){
+    try {
+      $pdo = connect();
+
+      $stmt = $pdo-> prepare("INSERT INTO products (product_name) VALUES (:productName)");
+      $stmt -> bindParam(':productName', $productName);
+
+      $stmt ->execute();
+
+      echo("New Product data was added successfully");
+
+    } catch (PDOException $e) {
+      echo "Insertion failed: ". $e->getMessage();
+    }
+}
+
+insertProduct("Apple");
