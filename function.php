@@ -68,4 +68,30 @@ function editProduct($productId, $newProductName){
   }
 }
 
-editProduct(1, "grapes");
+function getAllProducts(){
+  try {
+    $pdo = connect();
+
+    $stmt = pdo->prepare("SELECT * FROM products");
+
+    $stmt -> execute();
+
+    $products = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+
+    return $product;
+  } catch (PDOexception $e) {
+    echo "Selection failed: ". $e->getMessage();
+  }
+}
+
+function getProductById($productId){
+  try {
+    $pdo = connect();
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE ID = :productId");
+    $stmt ->bindParam(":productId", $productId);
+    $stmt = execute();
+    $product = $stmt -> fetch(PDO::FETCH_ASSOC);
+  } catch (exception $e) {
+  echo "Failed: " .$e->getMessage();
+  }
+}
