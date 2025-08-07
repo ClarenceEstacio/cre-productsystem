@@ -36,4 +36,18 @@ function insertProduct($productName){
     }
 }
 
-insertProduct("Apple");
+function deleteProduct($productId){
+  try {
+    $pdo = connect();
+
+    $stmt = $pdo->prepare("DELETE FROM products WHERE ID = :productId");
+
+    $stmt = bindParam(":productId", $productId);
+
+    $stmt->execute();
+
+    echo "Product Deleted Successfully";
+  } catch (PDO exception $e) {
+    echo "Deletion failed: " . $e->getMessage();
+  }
+}
