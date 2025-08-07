@@ -62,8 +62,10 @@ function editProduct($productId, $newProductName){
     $stmt->bindParam(":productId", productId);
     $stmt->execute();
 
-    echo "Product Edited Sucessfully!";
+    echo "Product Edited Successfully!";
   } catch (PDOexception $e) {
     echo "Edit failed: " . $e->getMessage();
   }
 }
+
+editProduct(1, "grapes");
