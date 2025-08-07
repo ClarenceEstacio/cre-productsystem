@@ -11,6 +11,7 @@ function connect (){
 
     $pdo-> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXECEPTION);
 
+    return $pdo;
     
 
   } catch (\Throwable $th) {
