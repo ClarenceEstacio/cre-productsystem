@@ -46,8 +46,24 @@ function deleteProduct($productId){
 
     $stmt->execute();
 
-    echo "Product Deleted Successfully";
+    echo "Product Deleted Successfully!";
   } catch (PDO exception $e) {
     echo "Deletion failed: " . $e->getMessage();
+  }
+}
+
+function editProduct($productId, $newProductName){
+  try {
+    $pdo = connect();
+    
+    $stmt = $pdo->prepare("UPDATE products SET product_name = :newProductName WHERE ID = :productId");
+
+    $stmt->bindParam(":newProductName", $newProductName);
+    $stmt->bindParam(":productId", productId);
+    $stmt->execute();
+
+    echo "Product Edited Sucessfully!";
+  } catch (PDOexception $e) {
+    echo "Edit failed: " . $e->getMessage();
   }
 }
