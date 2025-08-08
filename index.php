@@ -1,4 +1,12 @@
 <?php
+  error_reporting(E_ALL);
+  include_once ('function.php');
+  $products = getAllProducts();
+
+
+
+
+
 
 
 ?>
@@ -34,5 +42,30 @@
       </div>
     </div>
   </nav>
+
+  <div class="container">
+    <h1>Product</h1>
+    <div class="mt-5">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Product name</th>
+            <th>Created At</th>
+          </tr>
+        
+        </thead>
+        <tbody>
+        <?php foreach ($products as $product){?>
+            <tr>
+              <td><?= $product['ID'];?></td>
+              <td><?= $product['product_name'];?></td>
+              <td><?= $product['createdAt'];?></td>
+            </tr>
+        <?php } ?>    
+        </tbody>
+      </table>
+    </div>
+  </div>
 </body>
 </html>

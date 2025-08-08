@@ -1,97 +1,101 @@
 <?php
-function connect (){
-  $host = 'sql310.infinityfree.com';
-  $dbname = 'if0_39651259_productsystem';
-  $username = 'if0_39651259';
-  $password = 'tfPQMbzpK04xsP8';
+function connect() {
+    /*
+    $host = 'sql310.infinityfree.com';
+    $dbname = 'if0_39651259_productsystem';
+    $username = 'if0_39651259';
+    $password = 'tfPQMbzpK04xsP8';
+    */
+    $host = 'localhost';
+    $dbname = 'cre-productsystem';
+    $username = 'root';
+    $password = '';
 
-  try {
-    $pdo = new PDO("msql:host= $host; dbname= $dbname", $username, $password);
 
-
-    $pdo-> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXECEPTION);
-
-    return $pdo;
-    
-
-  } catch (PDOException $e) {
-    echo "Connection failed: " .$e->getMessage();
-  }
-  
-}
-
-function insertProduct($productName){
     try {
-      $pdo = connect();
-
-      $stmt = $pdo-> prepare("INSERT INTO products (product_name) VALUES (:productName)");
-      $stmt -> bindParam(':productName', $productName);
-
-      $stmt ->execute();
-
-      echo("New Product data was added successfully");
-
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $pdo;
     } catch (PDOException $e) {
-      echo "Insertion failed: ". $e->getMessage();
+        echo "Connection failed: " . $e->getMessage();
+    }finally{
+      $pdo = null;
     }
 }
 
-function deleteProduct($productId){
-  try {
-    $pdo = connect();
-
-    $stmt = $pdo->prepare("DELETE FROM products WHERE ID = :productId");
-
-    $stmt = bindParam(":productId", $productId);
-
-    $stmt->execute();
-
-    echo "Product Deleted Successfully!";
-  } catch (PDO exception $e) {
-    echo "Deletion failed: " . $e->getMessage();
-  }
+function insertProduct($productName) {
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("INSERT INTO products (product_name) VALUES (:productName)");
+        $stmt->bindParam(':productName', $productName);
+        $stmt->execute();
+        echo "New Product data was added successfully.";
+    } catch (PDOException $e) {
+        echo "Insertion failed: " . $e->getMessage();
+    }finally{
+      $pdo = null;
+    }
 }
 
-function editProduct($productId, $newProductName){
-  try {
-    $pdo = connect();
-    
-    $stmt = $pdo->prepare("UPDATE products SET product_name = :newProductName WHERE ID = :productId");
-
-    $stmt->bindParam(":newProductName", $newProductName);
-    $stmt->bindParam(":productId", productId);
-    $stmt->execute();
-
-    echo "Product Edited Successfully!";
-  } catch (PDOexception $e) {
-    echo "Edit failed: " . $e->getMessage();
-  }
+function deleteProduct($productId) {
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("DELETE FROM products WHERE ID = :productId");
+        $stmt->bindParam(":productId", $productId);
+        $stmt->execute();
+        echo "Product Deleted Successfully!";
+    } catch (PDOException $e) {
+        echo "Deletion failed: " . $e->getMessage();
+    }finally{
+      $pdo = null;
+    }
 }
 
-function getAllProducts(){
-  try {
-    $pdo = connect();
-
-    $stmt = pdo->prepare("SELECT * FROM products");
-
-    $stmt -> execute();
-
-    $products = $stmt -> fetchAll(PDO::FETCH_ASSOC);
-
-    return $product;
-  } catch (PDOexception $e) {
-    echo "Selection failed: ". $e->getMessage();
-  }
+function editProduct($productId, $newProductName) {
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE products SET product_name = :newProductName WHERE ID = :productId");
+        $stmt->bindParam(":newProductName", $newProductName);
+        $stmt->bindParam(":productId", $productId);
+        $stmt->execute();
+        echo "Product Edited Successfully!";
+    } catch (PDOException $e) {
+        echo "Edit failed: " . $e->getMessage();
+    }finally{
+      $pdo = null;
+    }
 }
 
-function getProductById($productId){
-  try {
-    $pdo = connect();
-    $stmt = $pdo->prepare("SELECT * FROM products WHERE ID = :productId");
-    $stmt ->bindParam(":productId", $productId);
-    $stmt = execute();
-    $product = $stmt -> fetch(PDO::FETCH_ASSOC);
-  } catch (exception $e) {
-  echo "Failed: " .$e->getMessage();
-  }
+function getAllProducts() {
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT * FROM products");
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $products;
+    } catch (PDOException $e) {
+        echo "Selection failed: " . $e->getMessage();
+    }finally{
+      $pdo = null;
+    }
 }
+
+function getProductById($productId) {
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT * FROM products WHERE ID = :productId");
+        $stmt->bindParam(":productId", $productId);
+        $stmt->execute();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $product;
+    } catch (PDOException $e) {
+        echo "Failed: " . $e->getMessage();
+    }finally{
+      $pdo = null;
+    }
+}
+
+
+?>
+
+
