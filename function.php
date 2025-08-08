@@ -23,13 +23,14 @@ function connect() {
     }
 }
 
-function insertProduct($productName) {
+function insertProduct($productName, $productDescription) {
     try {
         $pdo = connect();
-        $stmt = $pdo->prepare("INSERT INTO products (product_name) VALUES (:productName)");
+        $stmt = $pdo->prepare("INSERT INTO products (product_name, product_description) VALUES (:productName, :productDescription)");
         $stmt->bindParam(':productName', $productName);
+        $stmt->bindParam(':productDescription', $productDescription);
         $stmt->execute();
-        echo "New Product data was added successfully.";
+        return $pdo->lastInsertId();
     } catch (PDOException $e) {
         echo "Insertion failed: " . $e->getMessage();
     }finally{

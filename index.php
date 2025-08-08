@@ -1,51 +1,15 @@
 <?php
   error_reporting(E_ALL);
-  include_once ('function.php');
+  include_once ('./function.php');
   $products = getAllProducts();
 
-
-
-
-
-
-
-?>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/css/bootstrap.min.css" integrity="sha512-fw7f+TcMjTb7bpbLJZlP8g2Y4XcCyFZW8uy8HsRZsH/SwbMw0plKHFHr99DN3l04VsYNwvzicUX/6qurvIxbxw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/js/bootstrap.min.js" integrity="sha512-zKeerWHHuP3ar7kX2WKBSENzb+GJytFSBL6HrR2nPSR1kOX1qjm+oHooQtbDpDBSITgyl7QXZApvDfDWvKjkUw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  
-  <title>CRE- Product System</title>
-</head>
-<body>
-  <nav class = "navbar navbar-expand-sm bg-dark navbar-dark">
-    <div class= "container-fluid">
-      <a href="#" class="navbar-brand">Logo</a>
-      <button class="navbar-toggler" type="button" 
-      data-bs-toggle="collapse" 
-      data-bs-target = #collapsibleNavbar>
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="collapsibleNavbar">
-        <ul class="navbar-nav"> 
-          <li class="nav-link" href="#"> Products</li>
-          <li class="nav-link" href="#"> Login</li>
-          <li class="nav-link" href="#"> Logout</li>
-      </ul>
-      </div>
-    </div>
-  </nav>
+  ?>
+<?php include_once ('templates/header.php');?>
 
   <div class="container">
-    <h1>Product</h1>
-    <div class="mt-5">
+    <h1 class="mt-5">Product</h1>
+    <div class="mt-2">
+      <a href="addProduct.php" class="btn btn-lg bg-primary text-white mb-3"> Add New Product</a>
       <table class="table table-bordered table-hover">
         <thead>
           <tr>
@@ -58,7 +22,7 @@
         <tbody>
         <?php foreach ($products as $product){?>
             <tr>
-              <td><?= $product['ID'];?></td>
+              <td width = 50px> <a href="details.php?ID=<?= $product['ID'];?>" class="btn btn-sm bg-primary text-white">View</a></td>
               <td><?= $product['product_name'];?></td>
               <td><?= $product['createdAt'];?></td>
             </tr>
@@ -67,5 +31,4 @@
       </table>
     </div>
   </div>
-</body>
-</html>
+<?php include_once('templates/footer.php')?>
