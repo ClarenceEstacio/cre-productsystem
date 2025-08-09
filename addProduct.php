@@ -5,7 +5,10 @@ include_once('function.php');
 if(isset($_POST['submit'])){
   $id = insertProduct($_POST['product_name'], $_POST['product_description']);
   if(isset($id)){
-    uploadImage('image', 'uploads', $id);
+    $imageName = uploadImage('image', 'uploads', $id);
+    if($imageName != "Failed"){
+      updateImageData($id, $imageName);
+    }
     header('Location: details.php?ID='.$id);
   }
 

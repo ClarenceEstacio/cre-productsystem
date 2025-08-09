@@ -97,6 +97,22 @@ function getProductById($productId) {
     }
 }
 
+function updateImageData($productId, $imageName){
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE products SET product_image = :imageName WHERE ID = :productId");
+        $stmt->bindParam(':imageName', $imageName);
+        $stmt->bindParam(':productId', $productId);
+        $stmt->execute();
+        echo "Product images was updated successfully";
+    } catch (PDOException $e) {
+        echo "Image Edit filename Failed: ".$e->getMessage();
+    }finally{
+        $pdo = null;
+    }
+
+}
+
 function uploadImage($fileInputName, $uploadDirectory, $newFileName){
     if(isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] === UPLOAD_ERR_OK){
 
@@ -120,10 +136,12 @@ function uploadImage($fileInputName, $uploadDirectory, $newFileName){
         $destination = $uploadDirectory . '/' . $newFileNameWithExtension;
         
         if(!move_uploaded_file($tempFile, $destination)){
-            return "Error : Failed to move uploaded file.";
+            return "Failed";
+        }else{
+            return $newFileNameWithExtension;
         }
 
-        return "Image uploaded successfully";
+        
 
 
     }else{

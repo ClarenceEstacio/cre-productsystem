@@ -41,7 +41,11 @@
           <tr>
             <th>Updated at</th>
             <td></td>
-          </tr>  
+          </tr> 
+          <tr>
+            <th >Product Images</th>
+            <td class="text-center"><img src="uploads/<?= $product['product_image'];?>" alt="<?= $product['product_image'];?>"></td>
+          </tr> 
         </thead>
       </table>
     </div>

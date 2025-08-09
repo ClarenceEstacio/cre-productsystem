@@ -9,8 +9,18 @@ $id = $_GET['ID'];
 if(isset($_POST['submit'])){
   editProduct($_POST['ID'], $_POST['product_name'], $_POST['product_description']);
   
-  header('Location: details.php?ID='.$_POST['ID']);
+  // images edit
 
+  if($_FILES['image']['name']){
+    $imageName = uploadImage('image', 'uploads', $_POST['ID']);
+      if($imageName != "Failed"){
+        updateImageData($_POST['ID'], $imageName);
+      }
+  }
+ 
+  
+
+  header('Location: details.php?ID='.$_POST['ID']);
 
 }
 ?>
@@ -31,6 +41,9 @@ if(isset($_POST['submit'])){
     <div class="my-2">
       <label class="form-label">Product Description</label>
       <textarea rows="5" name="product_description" id="description" class="form-control" placeholder="Sepcify product description..." required value="<?= $product['product_description'];?>"></textarea>
+    </div>
+    <div class="my-4">
+      <input type="file" name="image" id="image">
     </div>
     <input type="hidden" name="ID" value="<?=$product['ID'];?>">
     <button type="submit" name="submit" class="btn btn-primary my-2 btn-lg">Update</button>
