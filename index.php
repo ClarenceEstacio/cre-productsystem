@@ -9,7 +9,7 @@
   <div class="container">
     <h1 class="mt-5">Product</h1>
     <div class="mt-2">
-      <a href="addProduct.php" class="btn btn-lg bg-primary text-white mb-3"> Add New Product</a>
+      <a href="addProduct.php" class="btn btn-lg bg-success text-white mb-3"> Add New Product</a>
       <table class="table table-bordered table-hover">
         <thead>
           <tr>

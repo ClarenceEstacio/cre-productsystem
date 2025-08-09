@@ -52,11 +52,12 @@ function deleteProduct($productId) {
     }
 }
 
-function editProduct($productId, $newProductName) {
+function editProduct($productId, $newProductName , $newProductDescription) {
     try {
         $pdo = connect();
-        $stmt = $pdo->prepare("UPDATE products SET product_name = :newProductName WHERE ID = :productId");
+        $stmt = $pdo->prepare("UPDATE products SET product_name = :newProductName, product_description = :newProductDescription WHERE ID = :productId");
         $stmt->bindParam(":newProductName", $newProductName);
+        $stmt->bindParam(":newProductDescription", $newProductDescription);
         $stmt->bindParam(":productId", $productId);
         $stmt->execute();
         echo "Product Edited Successfully!";
