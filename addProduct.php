@@ -5,6 +5,7 @@ include_once('function.php');
 if(isset($_POST['submit'])){
   $id = insertProduct($_POST['product_name'], $_POST['product_description']);
   if(isset($id)){
+    uploadImage('image', 'uploads', $id);
     header('Location: details.php?ID='.$id);
   }
 
@@ -26,8 +27,18 @@ if(isset($_POST['submit'])){
       <label class="form-label">Product Description</label>
       <textarea rows="5" name="product_description" id="description" class="form-control" placeholder="Sepcify product description..." required></textarea>
     </div>
+    <!-- images input -->
+    <div class="my-4">
+      <input type="file" name="image" id="image">
+    </div>
+    
     <button type="submit" name="submit" class="btn btn-primary my-2 btn-lg">Save</button>
   </form>
+
+  
+
+
+
 </div>
 
 <?php include_once('templates/footer.php')?>

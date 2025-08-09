@@ -97,6 +97,41 @@ function getProductById($productId) {
     }
 }
 
+function uploadImage($fileInputName, $uploadDirectory, $newFileName){
+    if(isset($_FILES[$fileInputName]) && $_FILES[$fileInputName]['error'] === UPLOAD_ERR_OK){
+
+        $tempFile = $_FILES[$fileInputName]['tmp_name'];
+        $originalFileName = $_FILES[$fileInputName]['name'];
+
+        // validate file type
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE); // kukuha ng details ng files
+        $mineType = finfo_file($fileInfo, $tempFile);
+        finfo_close($fileInfo);
+
+        $allowedType = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if(!in_array($mineType, $allowedType)){
+            return "Error: Invalid File type. Only JPG, PNG, and GIF images are allowed.";
+
+        }
+        // Rename the upload file
+        $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
+        $newFileNameWithExtension = $newFileName.'.'.$fileExtension;
+        $destination = $uploadDirectory . '/' . $newFileNameWithExtension;
+        
+        if(!move_uploaded_file($tempFile, $destination)){
+            return "Error : Failed to move uploaded file.";
+        }
+
+        return "Image uploaded successfully";
+
+
+    }else{
+        return "Error: File upload failed.";
+
+    }
+}
+
 
 ?>
 
