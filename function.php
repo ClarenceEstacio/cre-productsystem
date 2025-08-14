@@ -149,6 +149,56 @@ function uploadImage($fileInputName, $uploadDirectory, $newFileName){
 
     }
 }
+function register($email, $password){
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email ");
+        $stmt->bindParam(":email", $email);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO:: FETCH_ASSOC);
+        if($row){
+            return "User is already exist!";
+        }
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("INSERT INTO users (email, password) VALUE (:email, :password)");
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":password", $hashedPassword);
+        $stmt->execute();
+        return "Success";
+        
+    } catch (PDOexception $e) {
+        echo " Register Failed: ".$e->getMessage(); 
+    }finally{
+        $pdo = null;
+    }
+
+}
+
+function login($email, $password){
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt ->bindParam(":email", $email);
+        $stmt ->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row){
+            //verify password
+            if(password_verify($password, $row['password'])){
+                return $row;
+                // return "Success";
+            }else{
+                return "Invalid credentials";
+            }
+        }else{
+            return "User not found";
+        }
+    } catch (PDOexception $e) {
+        echo "Login Failed: ".$e->getMessage();
+    }finally{
+        $pdo = null;
+    }
+}
 
 
 ?>

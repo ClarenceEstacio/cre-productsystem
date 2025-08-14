@@ -1,3 +1,8 @@
+ <?php 
+  if(session_status() === PHP_SESSION_NONE){
+    session_start();
+  }
+ ?>
  <nav class = "navbar navbar-expand-sm bg-dark navbar-dark">
     <div class= "container-fluid">
       <a href="index.php" class="navbar-brand">Logo</a>
@@ -9,8 +14,14 @@
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav"> 
           <li class="nav-link"><a href="index.php" class="text-decoration-none text-white" >Product</a></li>
-          <li class="nav-link" ><a href="login.php" class="text-decoration-none text-white" >Login</a></li>
-          <li class="nav-link"><a href="logout.php" class="text-decoration-none text-white" >Logout</a></li>
+
+          
+          
+          <?php if(isset($_SESSION['LoginUser'])):?>
+            <li class="nav-link"><a href="logout.php" class="text-decoration-none text-white" >Logout</a></li>
+          <?php else: ?>
+            <li class="nav-link" ><a href="login.php" class="text-decoration-none text-white" >Login</a></li>
+          <?php endif?>
       </ul>
       </div>
     </div>

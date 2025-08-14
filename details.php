@@ -1,5 +1,8 @@
 <?php
   error_reporting(E_ALL);
+  if(session_status() === PHP_SESSION_NONE){
+    session_start();
+  }
   include_once ('./function.php');
   $id = $_GET['ID'];
   if(isset($id)){
@@ -18,14 +21,16 @@
     <h1 class="mt-5"><?= $product['product_name'];?></h1>
     <div class="mt-2">
 
-
-    <form method="POST">
+    <?php if(isset($_SESSION['LoginUser'])):?>
+      <form method="POST">
       <div class="btn-group my-4 gap-1">
         <a href="editProduct.php?ID=<?= $product['ID'];?>" class="btn btn-primary">Edit Product</a>
         <button name="delete" class="btn btn-danger">Delete Product</button>
         <input type="hidden" name="ID" value="<?= $product['ID'];?>">
       </div>
     </form>
+    <?php endif; ?>
+    
 
       
 
