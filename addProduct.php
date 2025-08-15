@@ -1,9 +1,11 @@
 <?php 
 include_once('function.php');
-
+if(!isset($_SESSION['LoginUser'])){
+  header('Location: Login.php');
+}
 
 if(isset($_POST['submit'])){
-  $id = insertProduct($_POST['product_name'], $_POST['product_description']);
+  $id = insertProduct($_POST['product_name'], $_POST['product_description'], $_SESSION['LoginUser']);
   if(isset($id)){
     $imageName = uploadImage('image', 'uploads', $id);
     if($imageName != "Failed"){
@@ -28,7 +30,7 @@ if(isset($_POST['submit'])){
     </div>
     <div class="my-2">
       <label class="form-label">Product Description</label>
-      <textarea rows="5" name="product_description" id="description" class="form-control" placeholder="Sepcify product description..." required></textarea>
+      <textarea rows="5" name="product_description" id="description" class="form-control" placeholder="Specify product description..." required></textarea>
     </div>
     <!-- images input -->
     <div class="my-4">

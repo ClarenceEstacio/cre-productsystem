@@ -1,8 +1,4 @@
 <?php
-  error_reporting(E_ALL);
-  if(session_status() === PHP_SESSION_NONE){
-    session_start();
-  }
   include_once ('./function.php');
   $id = $_GET['ID'];
   if(isset($id)){
@@ -41,15 +37,25 @@
             <td> <?= $product['product_description'];?></td>
           </tr>
           <tr>
+            <th>Added by</th>
+            <td> <?= $product['added_by'];?></td>
+          </tr>
+          <tr>
             <th>Created at</th>
-            <td><?= $product['createdAt'];?></td></tr>
+            <td><?= $product['createdAt'];?></td>
+          </tr>
+          <tr>
+            <th>Updated by</th>
+            <td> <?= $product['update_by'];?></td>
+          </tr>
           <tr>
             <th>Updated at</th>
-            <td></td>
+            <td><?= $product['updatedAt']?></td>
           </tr> 
           <tr>
             <th >Product Images</th>
-            <td class="text-center"><img src="uploads/<?= $product['product_image'];?>" alt="<?= $product['product_image'];?>"></td>
+            <td class="text-center"><img src="<?= $product['product_image'] != "" ? 'uploads/'.$product['product_image'] : 'assets/default.jpg' ?>" alt="<?= $product['product_name']; ?>">
+            </td>
           </tr> 
         </thead>
       </table>

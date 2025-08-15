@@ -1,13 +1,18 @@
 <?php 
 include_once('function.php');
 
+if(!isset($_SESSION['LoginUser'])){
+  header('Location: Login.php');
+}
+
+
 $id = $_GET['ID'];
   if(isset($id)){
     $product = getProductById($id);
   }
 
 if(isset($_POST['submit'])){
-  editProduct($_POST['ID'], $_POST['product_name'], $_POST['product_description']);
+  editProduct($_POST['ID'], $_POST['product_name'], $_POST['product_description'], $_SESSION['LoginUser']);
   
   // images edit
 
@@ -17,9 +22,6 @@ if(isset($_POST['submit'])){
         updateImageData($_POST['ID'], $imageName);
       }
   }
- 
-  
-
   header('Location: details.php?ID='.$_POST['ID']);
 
 }

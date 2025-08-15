@@ -1,4 +1,10 @@
 <?php
+
+error_reporting(E_ALL);
+if(session_status() === PHP_SESSION_NONE){
+  session_start();
+}
+
 function connect() {
     /*
     $host = 'sql310.infinityfree.com';
@@ -23,10 +29,16 @@ function connect() {
     }
 }
 
-function insertProduct($productName, $productDescription) {
+function insertProduct($productName, $productDescription, $LogInUser) {
     try {
         $pdo = connect();
-        $stmt = $pdo->prepare("INSERT INTO products (product_name, product_description) VALUES (:productName, :productDescription)");
+        
+        $sqlSetTimezome = "SET time_zone = '+08:00'";
+        $pdo->exec($sqlSetTimezome);
+
+        
+        $stmt = $pdo->prepare("INSERT INTO products (product_name, product_description, added_by, createdAt) VALUES (:productName, :productDescription, :addedBy, NOW())");
+        $stmt->bindParam(':addedBy', $LogInUser['email']);
         $stmt->bindParam(':productName', $productName);
         $stmt->bindParam(':productDescription', $productDescription);
         $stmt->execute();
@@ -52,12 +64,16 @@ function deleteProduct($productId) {
     }
 }
 
-function editProduct($productId, $newProductName , $newProductDescription) {
+function editProduct($productId, $newProductName , $newProductDescription, $LogInUser) {
     try {
         $pdo = connect();
-        $stmt = $pdo->prepare("UPDATE products SET product_name = :newProductName, product_description = :newProductDescription WHERE ID = :productId");
+        $sqlSetTimezome = "SET time_zone = '+08:00'";
+        $pdo->exec($sqlSetTimezome);
+
+        $stmt = $pdo->prepare("UPDATE products SET product_name = :newProductName, product_description = :newProductDescription, update_by = :updatedBy, updatedAt = NOW() WHERE ID = :productId");
         $stmt->bindParam(":newProductName", $newProductName);
         $stmt->bindParam(":newProductDescription", $newProductDescription);
+        $stmt->bindParam(":updatedBy", $LogInUser['email']);
         $stmt->bindParam(":productId", $productId);
         $stmt->execute();
         echo "Product Edited Successfully!";
@@ -145,7 +161,7 @@ function uploadImage($fileInputName, $uploadDirectory, $newFileName){
 
 
     }else{
-        return "Error: File upload failed.";
+        return "Failed";
 
     }
 }
@@ -167,7 +183,7 @@ function register($email, $password){
         $stmt->execute();
         return "Success";
         
-    } catch (PDOexception $e) {
+    } catch (PDOException $e) {
         echo " Register Failed: ".$e->getMessage(); 
     }finally{
         $pdo = null;
@@ -193,14 +209,48 @@ function login($email, $password){
         }else{
             return "User not found";
         }
-    } catch (PDOexception $e) {
+    } catch (PDOException $e) {
         echo "Login Failed: ".$e->getMessage();
     }finally{
         $pdo = null;
     }
 }
+function getUserById($userId){
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT * from users WHERE ID = :userId");
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
 
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $user;
 
-?>
+    } catch (PDOException $e) {
+        echo "Failed". $e->getMessage();
+    }finally{
+        $pdo = null;
+    }
+}
+
+function updateUserInfo($userId, $firstname, $lastname){
+
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("UPDATE users Set firstname = :firstname, lastname = :lastname WHERE ID = :userId");
+        $stmt->bindParam(':firstname', $firstname);
+        $stmt->bindParam(':lastname',$lastname);
+        $stmt->bindParam(':userId',$userId);
+        $stmt->execute();
+        return "Success";
+
+    } catch (PDOException $e) {
+        echo "Update Failed". $e->getMessage() ;
+    }finally{
+        $pdo = null;
+    }
+
+}
+
 
 
