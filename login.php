@@ -4,7 +4,7 @@ include_once('function.php');
 //process
 if(isset($_POST['submit'])){
   $row = login($_POST['email'], $_POST['password']);
-  if($row){
+  if($row != "Invalid credentials" && $row != "User not found"){
     $_SESSION['LoginUser'] = array(
       "ID" => $row['ID'],
       "firstname" => $row['firstname'],
@@ -15,7 +15,7 @@ if(isset($_POST['submit'])){
 
     // echo "<div class = 'bg-success text-white p-2'> Login Success! </div>";
   }else{
-    echo "<div class = 'bg-danger text-white p-2'> $status </div>";
+    echo "<div class = 'bg-danger text-white p-2'> $row </div>";
   }
 }
 

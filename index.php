@@ -1,7 +1,16 @@
 <?php
-  error_reporting(E_ALL);
-  include_once ('./function.php');
-  $products = getAllProducts();
+  include_once('./function.php');
+  $currentPage = $_GET['page'] ?? 1;
+  $itemsPerPage = 5;
+
+  $searchTerm = $_GET['search'] ?? '';
+  $totalItems = totalProducts($searchTerm);
+  $totalPages = ceil($totalItems / $itemsPerPage); // round off the value
+
+  $products = getAllProducts($currentPage, $itemsPerPage, $searchTerm);
+  $pageLinks = generatePageLinks($totalPages, $currentPage, $searchTerm);
+
+
 
   
 
@@ -13,8 +22,19 @@
     <div class="mt-2">
 
     <?php if(isset($_SESSION['LoginUser'])):?>
-      <a href="addProduct.php" class="btn btn-lg bg-success text-white mb-3"> Add New Product</a>
+      <a href="addProduct.php" class="btn bg-success text-white mb-3"> Add New Product</a>
        <?php endif; ?>
+
+
+      <div class="d-flex flex-row-reverse">
+        <form method="get" class="w-40  ">
+          <div class="input-group mb-3">
+            <input type="search" placeholder="Seach for product name" name="search" class="form-control " required>
+            <button type= "submit" class="btn btn-primary text-white input-group-append"> Search</button>
+          </div>
+        </form>
+      </div>
+
 
       <table class="table table-bordered table-hover">
         <thead>
@@ -35,6 +55,12 @@
         <?php } ?>    
         </tbody>
       </table>
+      <p class="my-4">Total of <?= $totalItems;?> products</p>
+      <nav> 
+        <ul class="pagination">
+          <?= $pageLinks?>
+        </ul>
+      </nav>
     </div>
   </div>
 <?php include_once('templates/footer.php')?>

@@ -83,11 +83,16 @@ function editProduct($productId, $newProductName , $newProductDescription, $LogI
       $pdo = null;
     }
 }
-
-function getAllProducts() {
+/* 
+function getAllProducts($currentPage, $itemsPerPage) {
     try {
         $pdo = connect();
-        $stmt = $pdo->prepare("SELECT * FROM products");
+
+        $offset = ($currentPage - 1 ) * $itemsPerPage;
+
+        $stmt = $pdo->prepare("SELECT * FROM products LIMIT :offset, :itemsPerPage");
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
         $stmt->execute();
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $products;
@@ -97,6 +102,123 @@ function getAllProducts() {
       $pdo = null;
     }
 }
+    */
+
+// with pagination system and search
+function getAllProducts($currentPage, $itemsPerPage, $searchTerm = "") {
+    try {
+        $pdo = connect();
+
+        $offset = ($currentPage - 1 ) * $itemsPerPage;
+
+        if(!empty($searchTerm)){
+            $stmt = $pdo->prepare("SELECT * FROM products WHERE product_name LIKE :searchTerm LIMIT :offset, :itemsPerPage");
+            $stmt->bindValue(':searchTerm', "%$searchTerm%", PDO::PARAM_STR);
+           
+        }else{
+            $stmt = $pdo->prepare("SELECT * FROM products LIMIT :offset, :itemsPerPage");
+        }
+
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $products;
+    } catch (PDOException $e) {
+        echo "Selection failed: " . $e->getMessage();
+    }finally{
+      $pdo = null;
+    }
+}
+// pagination system and search incorporated
+/* 
+function totalProducts (){
+    try {
+        $pdo = connect();
+        $stmt = $pdo->prepare("SELECT * FROM products");
+        $stmt->execute();
+
+        $totalItems = $stmt-> rowCount();
+
+        return $totalItems;
+    } catch (PDOException $e) {
+        echo "". $e->getMessage();
+    }finally{
+        $pdo = null;
+    }
+}*/
+
+function totalProducts ($searchTerm = ""){
+    try {
+        $pdo = connect();
+
+        if(!empty($searchTerm)){
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM products WHERE product_name LIKE :searchTerm");
+            $stmt->bindValue(':searchTerm', "%$searchTerm%", PDO::PARAM_STR);
+        }else{
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM products");
+        }
+        $stmt->execute();
+
+        $totalItems = $stmt-> fetchColumn();
+
+        return $totalItems;
+    } catch (PDOException $e) {
+        echo "". $e->getMessage();
+    }finally{
+        $pdo = null;
+    }
+}
+// with search and pagination system
+function generatePageLinks($totalPages, $currentPage, $searchTerm = ""){
+
+    if($totalPages > 1){
+        $links = "";
+
+        if($currentPage > 1){
+            $prevPageLink = ($searchTerm !== "") ? "?page=". ($currentPage - 1)."&search=$searchTerm" : "?page=" . ($currentPage - 1);
+            
+            $links .= "<li class= 'page-item'><a href='$prevPageLink' class='page-link'> &laquo; Previous </a></li>";
+        }
+        for($page = 1; $page <= $totalPages; $page++ ){
+            $activeClass = ($page == $currentPage) ? 'active' : "";
+
+            $pageLink = ($searchTerm !== "") ? "?page=$page&search=$searchTerm" : "?page=$page";
+
+            $links .= "<li class= 'page-item'><a href='$pageLink' class='$activeClass page-link'>$page</a></li>";
+        }
+        if($currentPage < $totalPages){
+            
+            $nextPageLink = ($searchTerm !== "") ? "?page=" . ($currentPage + 1) . "&search=$searchTerm" : "?page=" . ($currentPage + 1);
+
+            $links .= "<li class= 'page-item'><a href='$nextPageLink' class='page-link'> Next &raquo; </a></li>";
+
+        }
+        return $links;
+    }
+} 
+/* 
+function generatePageLinks($totalPages, $currentPage){
+
+    if($totalPages > 1){
+        $links = "";
+        if($currentPage > 1){
+            $prevPage = $currentPage - 1;
+            $links .= "<li class= 'page-item'><a href='?page=$prevPage' class='page-link'> &laquo; Previous </a></li>";
+        }
+        for($page = 1; $page <= $totalPages; $page++ ){
+            $activeClass = ($page == $currentPage) ? 'active' : "";
+            $links .= "<li class= 'page-item'><a href='?page=$page' class='$activeClass page-link'>$page</a></li>";
+        }
+        if($currentPage < $totalPages){
+            $nextPage = $currentPage + 1;
+            $links .= "<li class= 'page-item'><a href='?page=$page' class='page-link'> Next &raquo; </a></li>";
+
+        }
+        return $links;
+    }
+}
+*/
 
 function getProductById($productId) {
     try {
